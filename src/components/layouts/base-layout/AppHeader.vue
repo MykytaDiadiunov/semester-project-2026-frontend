@@ -11,7 +11,7 @@
         <div
           class="text-xl font-bold tracking-tight cursor-pointer transition-colors"
           :style="{ color: themeVars.textColor1 }"
-          @click="routing.toHome()"
+          @click="routing.toCatalog()"
           @mouseenter="(e) => ((e.target as HTMLElement).style.color = themeVars.primaryColor)"
           @mouseleave="(e) => ((e.target as HTMLElement).style.color = themeVars.textColor1)"
         >
@@ -60,6 +60,6 @@ const routing = useRouting();
 const themeVars = useThemeVars();
 
 const actionList: HeaderActionItem[] = [
-  { title: t('header.home'), routing: () => routing.toHome() }
+  { title: t('header.catalog'), routing: () => routing.toCatalog() }
 ];
 </script>

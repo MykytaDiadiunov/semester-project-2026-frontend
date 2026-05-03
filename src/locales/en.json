@@ -1,6 +1,7 @@
 {
   "header": {
     "home": "Home",
+    "catalog": "Catalog",
     "auth": "Login / Registration"
   },
   "footer": {
@@ -33,6 +34,14 @@
     "change_lang": "Change language",
     "change_theme": "Change theme",
     "localisation": "Localisation"
+  },
+  "core": {
+    "labels": {
+      "add_to_cart": "Add to cart",
+      "back": "Back",
+      "description": "Description"
+    },
+    "no_data": "No data yet"
   },
   "theme": {
     "light": "Light",

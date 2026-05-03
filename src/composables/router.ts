@@ -7,8 +7,8 @@ export const useRouting = () => {
     router.back();
   }
 
-  function toHome(): void {
-    router.push({ name: 'home' });
+  function toCatalog(): void {
+    router.push({ name: 'catalog' });
   }
 
   function toAuth(): void {
@@ -19,10 +19,15 @@ export const useRouting = () => {
     router.push({ name: 'profile' });
   }
 
+  function toProductWithId(id: number): void {
+    router.push({ name: 'product', params: { id } });
+  }
+
   return {
     back,
-    toHome,
+    toCatalog,
     toAuth,
-    toProfile
+    toProfile,
+    toProductWithId
   };
 };
