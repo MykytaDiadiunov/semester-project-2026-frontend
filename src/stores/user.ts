@@ -19,7 +19,7 @@ export interface TokenedUser extends User {
 }
 
 export const useUserStore = defineStore('user', () => {
-  const { toHome, toAuth } = useRouting();
+  const { toCatalog, toAuth } = useRouting();
 
   const tokenStore = useTokenStore();
 
@@ -55,14 +55,14 @@ export const useUserStore = defineStore('user', () => {
     const response = await apiService.post<TokenedUser>('/user/login/', loginBody);
     _setUserResponse(response);
 
-    toHome();
+    toCatalog();
   }
 
   async function register(registerForm: RegisterForm): Promise<void> {
     const response = await apiService.post<{ user: TokenedUser }>('/user/register/', registerForm);
     _setUserResponse(response.user);
 
-    toHome();
+    toCatalog();
   }
 
   async function logout(): Promise<void> {

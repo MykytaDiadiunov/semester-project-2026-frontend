@@ -8,9 +8,9 @@ import {
 
 const routes: Array<RouteRecordRaw> = [
   {
-    name: 'home',
+    name: 'catalog',
     path: '/',
-    component: () => import('@/views/HomeView.vue'),
+    component: () => import('@/views/CatalogView.vue'),
     meta: {
       auth: false
     }
@@ -29,6 +29,14 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/CurrentUserProfile.vue'),
     meta: {
       auth: true
+    }
+  },
+  {
+    name: 'product',
+    path: '/product/:id',
+    component: () => import('@/views/ProductDetailView.vue'),
+    meta: {
+      auth: false
     }
   }
 ];
