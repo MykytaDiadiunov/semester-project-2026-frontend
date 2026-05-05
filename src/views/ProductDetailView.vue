@@ -22,11 +22,11 @@
 
       <n-card v-else size="large" class="rounded-2xl shadow-sm">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-          <div class="flex justify-center items-center p-4">
+          <div>
             <n-image
               :src="product.content_file"
               :alt="product.name"
-              class="w-full max-w-md rounded-lg"
+              class="w-full rounded-lg flex justify-center"
               object-fit="contain"
             />
           </div>

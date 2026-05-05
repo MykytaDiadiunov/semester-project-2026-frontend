@@ -35,6 +35,12 @@
     "change_theme": "Change theme",
     "localisation": "Localisation"
   },
+  "catalog": {
+    "filter": "Filter",
+    "categories": "Categories",
+    "price": "Price",
+    "clear": "Clear"
+  },
   "core": {
     "labels": {
       "add_to_cart": "Add to cart",
