@@ -23,11 +23,16 @@ export const useRouting = () => {
     router.push({ name: 'product', params: { id } });
   }
 
+  function toCart(): void {
+    router.push({ name: 'cart' });
+  }
+
   return {
     back,
     toCatalog,
     toAuth,
     toProfile,
-    toProductWithId
+    toProductWithId,
+    toCart
   };
 };
