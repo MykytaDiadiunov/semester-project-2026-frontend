@@ -32,7 +32,17 @@
           </n-button>
         </div>
 
-        <div v-else>
+        <div v-else class="flex gap-2">
+          <n-button circle class="relative" @click="routing.toCart">
+            <template #icon>
+              <div
+                v-if="itemsCount > 0"
+                class="absolute -top-0.5 -right-0.5 w-2 h-2 z-100 rounded-full"
+                :style="{ background: themeVars.primaryColor }"
+              />
+              <n-icon><ShoppingCart /></n-icon>
+            </template>
+          </n-button>
           <n-button circle @click="routing.toProfile">
             <template #icon>
               <n-icon><User /></n-icon>
@@ -45,16 +55,17 @@
 </template>
 
 <script setup lang="ts">
-import { User } from '@vicons/tabler';
+import { User, ShoppingCart } from '@vicons/tabler';
 import { NButton, NIcon, useThemeVars } from 'naive-ui';
 import { useI18n } from 'vue-i18n';
 import { useRouting } from '@/composables';
 import type { HeaderActionItem } from '@/types';
-import { useUserStore } from '@/stores';
+import { useCartStore, useUserStore } from '@/stores';
 import { storeToRefs } from 'pinia';
 
 const { t } = useI18n();
 const { isAuthorized } = storeToRefs(useUserStore());
+const { itemsCount } = storeToRefs(useCartStore());
 const routing = useRouting();
 
 const themeVars = useThemeVars();

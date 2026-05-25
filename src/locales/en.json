@@ -49,6 +49,11 @@
     },
     "no_data": "No data yet"
   },
+  "cart": {
+    "cost_of_goods": "Cost of goods",
+    "due": "Due",
+    "pay": "Pay"
+  },
   "theme": {
     "light": "Light",
     "dark": "Dark",
