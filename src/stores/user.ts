@@ -1,15 +1,25 @@
-import type { TokenedUser, User } from '@/temp/types/auth';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { useTokenStore } from '@/stores/token';
 import type { LoginForm } from '@/composables/forms/auth/login';
 import { useRouting, type RegisterForm } from '@/composables';
-import { useTempAuthApi } from '@/temp/api/auth';
 import { message } from '@/plugins';
+import { apiService } from '@/services';
+
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+}
+
+export interface TokenedUser extends User {
+  auth_token: string;
+}
 
 export const useUserStore = defineStore('user', () => {
-  const { login: loginRequest, register: registerRequest, me } = useTempAuthApi();
-  const { toHome, toAuth } = useRouting();
+  const { toCatalog, toAuth } = useRouting();
 
   const tokenStore = useTokenStore();
 
@@ -30,7 +40,7 @@ export const useUserStore = defineStore('user', () => {
 
   async function populateUser(): Promise<void> {
     try {
-      const response = await me();
+      const response = await apiService.get<TokenedUser>('/user/current/');
       setUser(response);
     } catch (e: unknown) {
       if (tokenStore.token) {
@@ -42,27 +52,29 @@ export const useUserStore = defineStore('user', () => {
   }
 
   async function login(loginBody: LoginForm): Promise<void> {
-    const response = await loginRequest(loginBody);
+    const response = await apiService.post<TokenedUser>('/user/login/', loginBody);
     _setUserResponse(response);
 
-    toHome();
+    toCatalog();
   }
 
   async function register(registerForm: RegisterForm): Promise<void> {
-    const response = await registerRequest(registerForm);
-    _setUserResponse(response);
+    const response = await apiService.post<{ user: TokenedUser }>('/user/register/', registerForm);
+    _setUserResponse(response.user);
 
-    toHome();
+    toCatalog();
   }
 
   async function logout(): Promise<void> {
+    await apiService.del('/user/logout/');
+
     removeUserData();
   }
 
   function _setUserResponse(authResponse: TokenedUser): void {
-    const { token, ...user } = authResponse;
+    const { auth_token, ...user } = authResponse;
 
-    tokenStore.setToken(token);
+    tokenStore.setToken(auth_token);
     setUser(user);
   }
 
