@@ -46,14 +46,29 @@
               <n-text depth="3" class="text-2xl font-medium">{{ CURRENT_CURRENCY }}</n-text>
             </div>
 
-            <n-button
-              type="primary"
-              size="large"
-              class="w-full md:w-auto py-6 text-lg font-semibold"
-              @click="addToCart"
-            >
-              {{ t('core.labels.add_to_cart') }}
-            </n-button>
+            <div class="flex gap-2">
+              <n-button
+                type="primary"
+                size="large"
+                class="w-full md:w-auto py-6 text-lg font-semibold"
+                :disabled="isItemInCart"
+                :loading="isManageCartPending"
+                @click="() => manageCartItemWrapper(1)"
+              >
+                {{ isItemInCart ? t('core.labels.already_in_cart') : t('core.labels.add_to_cart') }}
+              </n-button>
+
+              <n-button
+                v-if="isItemInCart"
+                tertiary
+                type="error"
+                class="w-full min-h-full md:w-auto py-6 text-lg font-semibold"
+                :loading="isManageCartPending"
+                @click="() => manageCartItemWrapper(-1)"
+              >
+                <n-icon><Trash /></n-icon>
+              </n-button>
+            </div>
 
             <n-divider class="my-2" />
 
@@ -86,34 +101,47 @@ import {
   NText,
   NIcon
 } from 'naive-ui';
+import { Trash } from '@vicons/tabler';
 import { ArrowBack } from '@vicons/tabler';
 import { useRoute, useRouter } from 'vue-router';
-import { useQuery } from '@tanstack/vue-query';
+import { useMutation, useQuery } from '@tanstack/vue-query';
 import { useI18n } from 'vue-i18n';
 import { CURRENT_CURRENCY } from '@/constants';
-import { useProducts, type Product } from '@/composables';
+import { useProducts, type ManageCartItemBody, type Product } from '@/composables';
+import { useCartStore } from '@/stores';
+import { storeToRefs } from 'pinia';
+import { message } from '@/plugins';
+import { computed } from 'vue';
 
 const route = useRoute();
 const router = useRouter();
-const { t } = useI18n();
 
 const productId = route.params.id as string;
+
+const cartStore = useCartStore();
+const { t } = useI18n();
 const { fetchProductById } = useProducts();
+
+const { cart } = storeToRefs(cartStore);
 
 const { isLoading, data: product } = useQuery<Product>({
   queryKey: ['product', productId],
-  // И здесь тоже
   queryFn: () => fetchProductById(Number(productId)),
   enabled: !!productId
 });
 
-const emit = defineEmits<{
-  (e: 'add-to-cart', product: Product): void;
-}>();
+const { mutateAsync: manageCartItemMutate, isPending: isManageCartPending } = useMutation({
+  mutationFn: (itemToManage: ManageCartItemBody) => cartStore.manageCartItem(itemToManage),
+  onError: (e: unknown) => message.error(String(e)),
+  onSuccess: () => message.success(t('validation.success'))
+});
 
-const addToCart = () => {
-  if (product.value) {
-    emit('add-to-cart', product.value);
-  }
-};
+const isItemInCart = computed<boolean>(() => cartStore.itemInCart(product.value!.id));
+
+async function manageCartItemWrapper(quantity: number) {
+  await manageCartItemMutate({
+    product: product.value!.id,
+    quantity
+  });
+}
 </script>

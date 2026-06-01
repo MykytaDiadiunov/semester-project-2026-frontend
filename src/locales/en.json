@@ -44,6 +44,7 @@
   "core": {
     "labels": {
       "add_to_cart": "Add to cart",
+      "already_in_cart": "Already in cart",
       "back": "Back",
       "description": "Description"
     },
