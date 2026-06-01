@@ -27,7 +27,7 @@ export const useCart = () => {
   }
 
   async function manageCartItem(addItemBody: ManageCartItemBody): Promise<Cart> {
-    return await apiService.post<Cart>('/cart/add-item/', addItemBody);
+    return await apiService.post<Cart>('/cart/manage-item/', addItemBody);
   }
 
   return { fetchCart, manageCartItem };
