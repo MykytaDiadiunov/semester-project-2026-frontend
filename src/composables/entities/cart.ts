@@ -30,5 +30,9 @@ export const useCart = () => {
     return await apiService.post<Cart>('/cart/manage-item/', addItemBody);
   }
 
-  return { fetchCart, manageCartItem };
+  async function closeCartOrder(): Promise<void> {
+    return await apiService.patch('/cart/close-cart-order/');
+  }
+
+  return { fetchCart, manageCartItem, closeCartOrder };
 };

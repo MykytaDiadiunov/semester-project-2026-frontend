@@ -4,7 +4,7 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
 export const useCartStore = defineStore('cart', () => {
-  const { fetchCart, manageCartItem: mCartItem } = useCart();
+  const cartRequests = useCart();
 
   const cart = ref<Cart | null>(null);
 
@@ -22,7 +22,7 @@ export const useCartStore = defineStore('cart', () => {
   async function populateCart(): Promise<void> {
     isCartLoading.value = true;
     try {
-      const response = await fetchCart();
+      const response = await cartRequests.fetchCart();
       cart.value = response;
     } catch (e: unknown) {
       message.error(String(e));
@@ -32,8 +32,13 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   async function manageCartItem(cartItem: ManageCartItemBody): Promise<void> {
-    const response = await mCartItem(cartItem);
+    const response = await cartRequests.manageCartItem(cartItem);
     cart.value = { ...response };
+  }
+
+  async function closeCartOrder(): Promise<void> {
+    await cartRequests.closeCartOrder();
+    await populateCart();
   }
 
   function itemInCart(itemId: number): boolean {
@@ -42,5 +47,14 @@ export const useCartStore = defineStore('cart', () => {
     return cart.value.items.some((el: CartItem) => el.product.id === itemId);
   }
 
-  return { cart, isCartLoading, itemsCount, totalPrice, populateCart, manageCartItem, itemInCart };
+  return {
+    cart,
+    isCartLoading,
+    itemsCount,
+    totalPrice,
+    populateCart,
+    manageCartItem,
+    itemInCart,
+    closeCartOrder
+  };
 });
